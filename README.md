@@ -1,8 +1,12 @@
 # Shopping Cart
 > Nama: Jen Agresia Misti
+
 > NIM: 2409116007
+
 > Kelas: A 24
+
 > Mata Kuliah: Pemograman Aplikasi Bergerak
+
 > Tugas: State Management dengan Provider
 
 ## Struktur Project
