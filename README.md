@@ -26,7 +26,7 @@ lib/
 
 ## 🧩 Penjelasan Fitur
 
-### 1. Add to Cart Button
+### 1. Add to Cart Button dan Cart Badge
 
 Tombol "Add to Cart" memanggil `cart.addItem(product)` langsung ke CartModel. Pakai `context.read<CartModel>()` karena tombol hanya perlu melakukan aksi, tidak perlu rebuild saat cart berubah. Tombol otomatis berubah jadi **"✓ Added"** kalau produk sudah ada di cart karena dibungkus `Consumer<CartModel>`.
 
@@ -42,11 +42,9 @@ Consumer(
 )
 ```
 
-> visual
+><img width="350" height="778" alt="Screenshot_1772031416" src="https://github.com/user-attachments/assets/398d873f-af9f-4aec-9371-4b0507a28b84" />
 
 
-### 2. Cart Badge — Item Count
-`lib/pages/product_list_page.dart` → bagian `AppBar actions`
 
 Badge merah di ikon cart menampilkan total quantity semua item. Pakai `Consumer<CartModel>` agar badge otomatis update setiap kali item ditambah atau dikurangi.
 
@@ -72,12 +70,14 @@ Consumer(
 )
 ```
 
-> visual
+> <img width="317" height="184" alt="Screenshot 2026-02-25 230028" src="https://github.com/user-attachments/assets/c559a7cd-caae-4d70-b803-cb1690af00a8" />
 
 
 
-### 6. Search by Name
-`lib/pages/product_list_page.dart` → `TextField` + filter logic
+
+### 2. Search by Name
+
+>`lib/pages/product_list_page.dart` → `TextField` + filter logic
 
 Menggunakan ephemeral state (`setState`) karena search hanya dipakai di halaman ini saja. Setiap huruf yang diketik langsung memfilter list produk secara real-time menggunakan `.contains()`.
 
@@ -91,14 +91,13 @@ TextField(
 ),
 ```
 
-> 📸 [Tambahkan screenshot di sini]
+> <img width="350" height="778" alt="Screenshot_1772031877" src="https://github.com/user-attachments/assets/e51b72fa-1c23-460e-b934-c75e05663097" />
 
----
+### 3. Filter by Category
 
-### 7. Filter by Category
-`lib/pages/product_list_page.dart` → `ChoiceChip`
+>`lib/pages/product_list_page.dart` → `ChoiceChip`
 
-Filter kategori menggunakan `ChoiceChip` yang bisa dipilih. Digabung dengan filter search menggunakan operator `&&` — produk harus memenuhi kedua kondisi sekaligus. Memilih "All" menampilkan semua produk.
+Filter kategori menggunakan `ChoiceChip` yang bisa dipilih. Memilih "All" menampilkan semua produk.
 
 ```dart
 ...['All', 'Sport', 'Casual', 'Formal'].map((cat) {
@@ -113,12 +112,11 @@ Filter kategori menggunakan `ChoiceChip` yang bisa dipilih. Digabung dengan filt
 })
 ```
 
-> 📸 [Tambahkan screenshot di sini]
+> <img width="350" height="778" alt="Screenshot_1772031968" src="https://github.com/user-attachments/assets/42385b10-ac57-46ee-845d-898433acb94a" />
 
----
+### 4. Cart Page with All Items dan Increase / Decrease Quantity
 
-### 8. Cart Page with All Items
-`lib/pages/cart_page.dart`
+>`lib/pages/cart_page.dart`
 
 Menampilkan semua item di cart menggunakan `ListView.builder` yang membaca dari `cart.itemsList`. Dibungkus `Consumer<CartModel>` agar otomatis rebuild setiap kali ada perubahan di cart.
 
@@ -129,20 +127,19 @@ Consumer(
       itemCount: cart.itemsList.length,
       itemBuilder: (context, index) {
         final cartItem = cart.itemsList[index];
-        // tampilkan gambar, nama, harga, qty, tombol delete
       },
     );
   },
 )
 ```
 
-> 📸 [Tambahkan screenshot di sini]
+> <img width="350" height="778" alt="Screenshot_1772032110" src="https://github.com/user-attachments/assets/02bd200a-04e2-4103-8042-b05554194560" />
 
----
+**Increase / Decrease Quantity**
 
-### 9. Increase / Decrease Quantity
-`lib/models/cart_model.dart` → `increaseQuantity()` & `decreaseQuantity()`
-`lib/pages/cart_page.dart` → row tombol +/-
+>`lib/models/cart_model.dart` → `increaseQuantity()` & `decreaseQuantity()`
+
+>`lib/pages/cart_page.dart` → row tombol +/-
 
 `increaseQuantity` menambah qty langsung di Map. `decreaseQuantity` punya logika khusus: jika qty sudah 1 lalu dikurangi, item otomatis dihapus dari cart.
 
@@ -157,13 +154,9 @@ void decreaseQuantity(String productId) {
 }
 ```
 
-> 📸 [Tambahkan screenshot di sini]
-
----
-
-### 10. Remove Item Button
-`lib/pages/cart_page.dart` → `IconButton` trash icon
-`lib/models/cart_model.dart` → `removeItem()`
+### 5. Remove Item Button
+> `lib/pages/cart_page.dart` → `IconButton` trash icon
+> `lib/models/cart_model.dart` → `removeItem()`
 
 Tombol hapus memanggil `removeItem()` lalu menampilkan Snackbar konfirmasi. Item langsung hilang dari list karena `notifyListeners()` memicu rebuild UI secara otomatis.
 
@@ -179,12 +172,14 @@ IconButton(
 )
 ```
 
-> 📸 [Tambahkan screenshot di sini]
+<img width="350" height="778" alt="Screenshot_1772032385" src="https://github.com/user-attachments/assets/57bb88b6-4b01-426d-914a-bc1bf590183a" />
 
----
+### 6 Checkout Page (Total Price Calculation, Order Summary & Form)
 
-### 11. Total Price Calculation
-`lib/models/cart_model.dart` → getter `totalPrice`
+**Total Price Calculation**
+
+> `lib/models/cart_model.dart` → getter `totalPrice`
+
 Ditampilkan di: `cart_page.dart` + `checkout_page.dart` + tombol Place Order
 
 Menggunakan `fold()` untuk menjumlahkan `totalPrice` dari setiap CartItem. `totalPrice` per item adalah `price × quantity`.
@@ -199,12 +194,31 @@ double get totalPrice {
 }
 ```
 
-> 📸 [Tambahkan screenshot di sini]
+**Order Summary & Form**
+
+Terdiri dari dua bagian: **Order Summary** (daftar item + total harga) dan **Form** (nama, alamat, nomor telepon). Form pakai `GlobalKey<FormState>` untuk validasi — tombol Place Order tidak bisa diproses kalau form belum lengkap. Setelah order berhasil, `cart.clear()` dipanggil dan pengguna diarahkan kembali ke halaman produk.
+
+```dart
+if (_formKey.currentState!.validate()) {
+  cart.clear();
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Order Placed!'),
+      content: Text('Thank you, ${nameController.text}!'),
+    ),
+  );
+}
+```
+
+
+> <img width="350" height="778" alt="Screenshot_1772032496" src="https://github.com/user-attachments/assets/38d765ed-efdd-4968-9b34-2234dcbdec2c" />
+
 
 ---
 
-### 12. Empty Cart Message
-`lib/pages/cart_page.dart` → kondisi `if (cart.isEmpty)`
+### 7. Empty Cart Message
+> `lib/pages/cart_page.dart` → kondisi `if (cart.isEmpty)`
 
 Ketika cart kosong, halaman menampilkan ikon + pesan + tombol balik ke toko. Penting untuk user experience — pengguna tidak melihat halaman kosong tanpa penjelasan.
 
@@ -225,28 +239,24 @@ if (cart.isEmpty) {
 }
 ```
 
-> 📸 [Tambahkan screenshot di sini]
+> <img width="350" height="778" alt="Screenshot_1772032385" src="https://github.com/user-attachments/assets/01bd32e0-0045-49bc-a746-1f9b15f1eff7" />
 
----
+## Checklist Fitur
 
-### 13. Checkout Page — Order Summary + Form
-`lib/pages/checkout_page.dart`
+### Wajib (70 Points)
 
-Terdiri dari dua bagian: **Order Summary** (daftar item + total harga) dan **Form** (nama, alamat, nomor telepon). Form pakai `GlobalKey<FormState>` untuk validasi — tombol Place Order tidak bisa diproses kalau form belum lengkap. Setelah order berhasil, `cart.clear()` dipanggil dan pengguna diarahkan kembali ke halaman produk.
+| No | Fitur | Status | Lokasi Kode |
+|----|-------|--------|-------------|
+| 1 | Add to cart from product list | ✓ | `product_list_page.dart` → `_ProductCard` |
+| 2 | Show cart items dengan quantity | ✓ | `cart_page.dart` → `ListView.builder` |
+| 3 | Update quantity (+/-) | ✓ | `cart_model.dart` → `increaseQuantity / decreaseQuantity` |
+| 4 | Remove items from cart | ✓ | `cart_model.dart` → `removeItem()` |
+| 5 | Display total price correctly | ✓ | `cart_model.dart` → `totalPrice` getter |
 
-```dart
-if (_formKey.currentState!.validate()) {
-  cart.clear();
-  showDialog(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      title: const Text('Order Placed!'),
-      content: Text('Thank you, ${nameController.text}!'),
-    ),
-  );
-}
-```
+### Bonus (+30 Points)
 
-> 📸 [Tambahkan screenshot di sini]
-
----
+| No | Fitur | Points | Status | Lokasi Kode |
+|----|-------|--------|--------|-------------|
+| 1 | Search by name | +10 | ✓ | `product_list_page.dart` → `searchQuery` |
+| 2 | Filter by category | +10 | ✓ | `product_list_page.dart` → `selectedCategory` |
+| 3 | Checkout page (form + summary) | +10 | ✓ | `checkout_page.dart` |
